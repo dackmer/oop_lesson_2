@@ -177,16 +177,41 @@ print("The average number of games played for teams ranking below 10 versus")
 below_rank_10 = table4.filter(lambda x: int(x['ranking']) < 10)
 avg_games_below_rank_10 = below_rank_10.aggregate(lambda x: sum(x) / len(x), 'games')
 print("Average games played for teams below rank 10:", avg_games_below_rank_10)
-print()
 print("The average number of games played for teams ranking above or equal 10")
 rank_10_or_above = table4.filter(lambda x: int(x['ranking']) >= 10)
 avg_games_rank_10_or_above = rank_10_or_above.aggregate(lambda x: sum(x) / len(x), 'games')
 print("Average games played for teams rank 10 or above:", avg_games_rank_10_or_above)
 print()
 
+print("The average number of passes made by forwards versus by midfielders")
 forwards = table5.filter(lambda x: x['position'] == 'forward')
 avg_passes_forwards = forwards.aggregate(lambda x: sum(x) / len(x), 'passes')
 print("Average passes by forwards:", avg_passes_forwards)
 midfielders = table5.filter(lambda x: x['position'] == 'midfielder')
 avg_passes_midfielders = midfielders.aggregate(lambda x: sum(x) / len(x), 'passes')
 print("Average passes by midfielders:", avg_passes_midfielders)
+print()
+
+print("The average fare paid by passengers in the first class versus in the third class")
+titanic_table = Table('titanic', titanic)
+first_class_passengers = table3.filter(lambda x: x['class'] == '1')
+avg_fare_first_class = first_class_passengers.aggregate(lambda x: sum(x) / len(x), 'fare')
+print("Average fare for first class passengers:", avg_fare_first_class)
+third_class_passengers = table3.filter(lambda x: x['class'] == '3')
+avg_fare_third_class = third_class_passengers.aggregate(lambda x: sum(x) / len(x), 'fare')
+print("Average fare for third class passengers:", avg_fare_third_class)
+print()
+
+
+print("The survival rate of male versus female passengers")
+male_passengers = table3.filter(lambda x: x['gender'] == 'M')
+male_survived = [x for x in male_passengers.table if x['survived'] == 'yes']
+male_survival_rate = len(male_survived) / len(male_passengers.table)
+print("Survival rate for male passengers:", male_survival_rate)
+
+female_passengers = table3.filter(lambda x: x['gender'] == 'F')
+female_survived = [x for x in female_passengers.table if x['survived'] == 'yes']
+female_survival_rate = len(female_survived) / len(female_passengers.table)
+print("Survival rate for female passengers:", female_survival_rate)
+
+
