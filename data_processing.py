@@ -69,13 +69,25 @@ class Table:
             if condition(item1):
                 filtered_table.table.append(item1)
         return filtered_table
-    
+
+    def __is_float(self, element):
+        if element is None:
+            return False
+        try:
+            float(element)
+            return True
+        except ValueError:
+            return False
+
     def aggregate(self, function, aggregation_key):
         temps = []
         for item1 in self.table:
-            temps.append(float(item1[aggregation_key]))
+            if self.__is_float(item1[aggregation_key]):
+                temps.append(float(item1[aggregation_key]))
+            else:
+                temps.append(item1[aggregation_key])
         return function(temps)
-    
+
     def select(self, attributes_list):
         temps = []
         for item1 in self.table:
@@ -214,4 +226,16 @@ female_survived = [x for x in female_passengers.table if x['survived'] == 'yes']
 female_survival_rate = len(female_survived) / len(female_passengers.table)
 print("Survival rate for female passengers:", female_survival_rate)
 
+print()
 
+print("Find the total number of male passengers embarked at Southampton")
+male_passengers_southampton = table3.filter(lambda x: x['gender'] == 'M' and x['embarked'] == 'Southampton')
+total_male_passengers_southampton = len(male_passengers_southampton.table)
+print("Total number of male passengers embarked at Southampton:", total_male_passengers_southampton)
+
+
+
+table4 = Table('titanic', titanic)
+my_DB.insert(table4)
+my_table4 = my_DB.search('titanic')
+my_pivot = my_table4.pivot_table(['embarked', 'gender', 'class'], ['fare', 'fare', 'fare', 'last'], [lambda x: min(x), lambda x: max(x), lambda x: sum(x)/len(x), lambda x: len(x)])
