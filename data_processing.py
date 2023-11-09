@@ -235,7 +235,18 @@ print("Total number of male passengers embarked at Southampton:", total_male_pas
 
 
 
+my_DB = DB()
 table4 = Table('titanic', titanic)
 my_DB.insert(table4)
-my_table4 = my_DB.search('titanic')
-my_pivot = my_table4.pivot_table(['embarked', 'gender', 'class'], ['fare', 'fare', 'fare', 'last'], [lambda x: min(x), lambda x: max(x), lambda x: sum(x)/len(x), lambda x: len(x)])
+my_table4, table_name = my_DB.search('titanic')
+
+if my_table4 is not None:
+    my_pivot = my_table4.pivot_table(['embarked', 'gender', 'class'], ['fare', 'fare', 'fare', 'last'], [lambda x: min(x), lambda x: max(x), lambda x: sum(x)/len(x), lambda x: len(x)], my_DB, table_name)
+    for row in my_pivot:
+        print(row)
+else:
+    print("Table 'titanic' not found in the database.")
+
+
+
+
